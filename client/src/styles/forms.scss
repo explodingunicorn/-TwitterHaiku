@@ -1,0 +1,13 @@
+input {
+    box-sizing: border-box;
+    border: none;
+    border-radius: 30px;
+    font-family: $font-stack;
+    font-size: 22px;
+    padding: 15px 20px;
+    transition: all .4s;
+}
+
+input:focus {
+    box-shadow: 0 0 4px $purple-light;
+}

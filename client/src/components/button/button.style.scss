@@ -1,0 +1,30 @@
+@import '../../styles/colors';
+
+button {
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    padding: 15px 30px;
+    font-family: 'Montserrat';
+    font-size: 1em;
+    text-transform: uppercase;
+    transition: all .3s;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.search {
+    background-color: $purple;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    color: white;
+    font-family: 'Montserrat';
+    padding-left: 50px;
+    padding-right: 50px;
+
+    &:hover {
+        background-color: mix(white, $purple, 5%);
+    }
+}
