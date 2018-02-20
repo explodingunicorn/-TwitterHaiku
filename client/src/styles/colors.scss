@@ -10,7 +10,7 @@ $purple-light: #77739c;
 $black: #272727;
 
 $raised: 0px 0px 10px -2px $black;
-$raised-hover: 0px 2px 15px -2px $black;
+$raised-hover: 0px 5px 18px -4px $black;
 
 .main-green {
     background-color: $main-green;    
@@ -25,6 +25,11 @@ $raised-hover: 0px 2px 15px -2px $black;
 .blue {
     background-color: $blue;
     color: white !important
+}
+
+.blue-dark {
+    background-color: $blue-dark;
+    color: white !important;
 }
 
 .purple {

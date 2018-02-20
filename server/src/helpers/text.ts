@@ -1,72 +1,24 @@
-import * as rita from 'rita';
 import * as sentiment from 'sentiment';
 import Haiku from '../interfaces/haiku';
+import HaikuChecker from './haikuChecker';
 
-class HaikuChecker {
-    private textArray: string[];
-    private haikuSplit: string[] = [];
-    private haiku: string = '';
-    
-    constructor(text: string) {
-        const trimmedText = new rita.RiString(text).trim()._text;
-        this.textArray = trimmedText.split(' ');
-    }
-
-    public check() {
-        //Check that the tweet is atleast 3 words long
-        if (this.textArray.length > 2) {
-            //Now check for all of the syllables needed for a haiku
-            if (this.checkForSyllables(5)) {
-                if (this.checkForSyllables(7)) {
-                    if (this.checkForSyllables(5)) {
-                        if (this.textArray.length === 0) {
-                            return { 
-                                split: this.haikuSplit,
-                                haiku: this.haiku
-                            }
-                        }
-                        return;
-                    }
-                    return;
-                }
-                return;
-            }
-            return;
-        }
-        return;
-    }
-
-    private checkForSyllables(syllables: number) {
-        let syllableCount = 0;
-        let sentence = '';
-        let wordCount = 0;
-        for (let i = 0; i < this.textArray.length; i++) {
-            const word = this.textArray[i];
-            //Add syllables of the word to the syllable count
-            syllableCount += rita.getSyllables(word.replace("'", '')).split('/').length;
-            //Shift the text array removing the word
-            //Add the word to the sentence
-            sentence += (word + ' ');
-            wordCount++;
-
-            //If we have successfully hit our syllable count then push the sentence to our haiku split
-            if (syllableCount === syllables) {
-                this.haikuSplit.push(sentence);
-                this.haiku += sentence;
-                //Remove the words that we just counted
-                this.textArray.splice(0, wordCount);
-                return true;
-            }
-            //If we have gone over our syllable count with a single word than this tweet can no longer be a haiku
-            else if (syllableCount > syllables) {
-                return false;
-            }
-        }
-    }
+const monthDict = {
+    Jan: 1,
+    Feb: 2,
+    Mar: 3,
+    Apr: 4,
+    May: 5,
+    Jun: 6,
+    Jul: 7,
+    Aug: 8,
+    Sep: 9,
+    Oct: 10,
+    Nov: 11,
+    Dec: 12
 }
 
 class TextParser {
-    private tweets;
+    private tweets: any[];
     private haikus: Haiku[] = [];
 
     constructor(tweets: any[]) {
@@ -86,10 +38,14 @@ class TextParser {
     }
 
     private parseTweet(tweet: string):string | null {
-        if (tweet.includes('RT')) {
+        if (tweet.includes('RT ')) {
             return null;
         }
-        tweet = tweet.replace(/(@\S+)/gi, '').replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '').replace(/\s{2,}/g," ");
+        tweet = tweet.replace(/(@\S+)/gi, '')
+                    .replace(/(http\S+)/, '')
+                    .replace(/(#\S+)/, '')
+                    .replace(/[.,\/#!$%\^&\*\";:{}=\-_`~()\u2014\u2013]/g, '')
+                    .replace(/\s{2,}/g," ");
         return tweet;
     }
 
@@ -103,16 +59,25 @@ class TextParser {
 
         //If the tweet was a haiku return it as a Haiku object
         if (possibleHaiku) {
+            let parsedDate = fullTweetInfo.created_at.split(' ');
+            let date = monthDict[parsedDate[1]] + '/' + parsedDate[2] + '/' + parsedDate[5];
+
             return {
                 author: fullTweetInfo.user.screen_name,
+                authorId: fullTweetInfo.user.id,
+                authorImgLink: fullTweetInfo.user.profile_image_url_https,
+                authorUrl:  fullTweetInfo.user.url,
+                date,
                 haiku: possibleHaiku.split,
                 tweetId: fullTweetInfo.id,
+                tweetUrl: fullTweetInfo.entities.urls.url,
+                retweets: fullTweetInfo.retweet_count,
+                favorites: fullTweetInfo.favorite_count,
                 sentiment: sentiment(possibleHaiku.haiku)
             }
         }
-        else {
-            return;
-        }
+        
+        return;
         
     }
 }

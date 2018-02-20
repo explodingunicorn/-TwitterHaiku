@@ -5,7 +5,7 @@
     background-color: white;
     box-shadow: $raised;
     margin: 20px;
-    padding: 15px;
+    padding-bottom: 15px;
     position: relative;
     transition: all .3s;
 
@@ -14,18 +14,47 @@
     }
 
     .haiku-deco {
-        background-color: $purple;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        height: 5px;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
+        height: 39px;
+    }
+
+    .img-container {
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: $raised;
+        height: 48px;
+        margin: -24px auto 0px auto;
+        width: 48px;
+
+        img {
+            border-radius: 50%;
+        }
+    }
+
+    .haiku {
+        padding: 15px 0;
     }
 
     p {
         text-align: center;
         margin: 5px 0;
+    }
+
+    span {
+        display: inline-block;
+    }
+
+    hr {
+        border: none;
+        border-top: .5px solid #efefef;
+        display: block;
+    }
+
+    .date {
+        b {
+            text-transform: uppercase;
+            font-size: 12px;
+        }
     }
 }

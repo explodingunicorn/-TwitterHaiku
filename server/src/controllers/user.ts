@@ -4,8 +4,8 @@ import UserService from '../services/user.service';
 const service = new UserService();
 const routes = Router();
 
-routes.get('/', (req, res) => {
-    service.getUserHaikus('DestinyHarrigan').then((tweets) => {
+routes.get('/:id', (req, res) => {
+    service.getUserHaikus(req.params.id).then((tweets) => {
         res.status(200).json({ tweets });
     })
     .catch((errors) => {

@@ -4,6 +4,6 @@ const User = {
     get: {}
 };
 
-User.get.all = () => { return axios.get('/user') };
+User.get.all = (id) => { return axios.get('/user/' + id) };
 
 export default User;
