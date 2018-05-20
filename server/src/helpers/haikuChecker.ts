@@ -14,20 +14,14 @@ class HaikuChecker {
         //Check that the tweet is atleast 3 words long
         if (this.textArray.length > 2) {
             //Now check for all of the syllables needed for a haiku
-            if (this.checkForSyllables(5)) {
-                if (this.checkForSyllables(7)) {
-                    if (this.checkForSyllables(5)) {
-                        if (this.textArray.length === 0) {
-                            return { 
-                                split: this.haikuSplit,
-                                haiku: this.haiku
-                            }
-                        }
-                        return;
-                    }
-                    return;
+            if (this.checkForSyllables(5) && this.checkForSyllables(7) && this.checkForSyllables(5)) {
+              if (this.textArray.length === 0) {
+                return { 
+                  split: this.haikuSplit,
+                  haiku: this.haiku
                 }
-                return;
+              }
+              return;
             }
             return;
         }
@@ -55,6 +49,7 @@ class HaikuChecker {
                 this.textArray.splice(0, wordCount);
                 return true;
             }
+            
             //If we have gone over our syllable count with a single word than this tweet can no longer be a haiku
             else if (syllableCount > syllables) {
                 return false;

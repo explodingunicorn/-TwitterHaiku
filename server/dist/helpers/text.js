@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const sentiment = require("sentiment");
+const moment = require("moment");
 const haikuChecker_1 = require("./haikuChecker");
 const monthDict = {
     Jan: 1,
@@ -32,13 +33,14 @@ class TextParser {
         return this.haikus;
     }
     parseTweet(tweet) {
-        if (tweet.includes('RT ')) {
+        if (tweet.includes("RT ")) {
             return null;
         }
-        tweet = tweet.replace(/(@\S+)/gi, '')
-            .replace(/(http\S+)/, '')
-            .replace(/(#\S+)/, '')
-            .replace(/[.,\/#!$%\^&\*\";:{}=\-_`~()\u2014\u2013]/g, '')
+        tweet = tweet
+            .replace(/(@\S+)/gi, "")
+            .replace(/(http\S+)/, "")
+            .replace(/(#\S+)/, "")
+            .replace(/[.,\/#!$%\^&\*\";:{}=\-_`~()\u2014\u2013]/g, "")
             .replace(/\s{2,}/g, " ");
         return tweet;
     }
@@ -50,20 +52,23 @@ class TextParser {
         const possibleHaiku = new haikuChecker_1.default(tweet).check();
         //If the tweet was a haiku return it as a Haiku object
         if (possibleHaiku) {
-            let parsedDate = fullTweetInfo.created_at.split(' ');
-            let date = monthDict[parsedDate[1]] + '/' + parsedDate[2] + '/' + parsedDate[5];
+            let parsedDate = fullTweetInfo.created_at.split(" ");
+            let formattedDate = monthDict[parsedDate[1]] + "/" + parsedDate[2] + "/" + parsedDate[5];
             return {
                 author: fullTweetInfo.user.screen_name,
+                authorLower: fullTweetInfo.user.screen_name.toLowerCase(),
                 authorId: fullTweetInfo.user.id,
                 authorImgLink: fullTweetInfo.user.profile_image_url_https,
                 authorUrl: fullTweetInfo.user.url,
-                date,
+                createdOn: moment(fullTweetInfo.created_at).toDate(),
+                formattedDate,
                 haiku: possibleHaiku.split,
                 tweetId: fullTweetInfo.id,
                 tweetUrl: fullTweetInfo.entities.urls.url,
                 retweets: fullTweetInfo.retweet_count,
                 favorites: fullTweetInfo.favorite_count,
-                sentiment: sentiment(possibleHaiku.haiku)
+                sentiment: sentiment(possibleHaiku.haiku),
+                date: moment().toDate()
             };
         }
         return;

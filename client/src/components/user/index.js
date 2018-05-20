@@ -11,14 +11,10 @@ class User extends Component {
         }
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         console.log('getting data');
-        request.user.get.all(this.props.match.params.id).then((res) => {
-            this.setState({data: res.data});
-        })
-        .catch((err) => {
-            console.log('There was an error retrieving the data');
-        })
+        const data = await request.user.get.all(this.props.match.params.id);
+        this.setState({data});
     }
 
     renderHaikus() {
