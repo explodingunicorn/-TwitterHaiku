@@ -13,9 +13,9 @@ const user_service_1 = require("../services/user.service");
 const service = new user_service_1.default();
 const routes = express_1.Router();
 routes.get("/:id", (req, res) => __awaiter(this, void 0, void 0, function* () {
-    const tweets = yield service.getUserHaikus(req.params.id);
-    if (tweets) {
-        res.status(200).json({ tweets });
+    const user = yield service.getUserHaikus(req.params.id);
+    if (user) {
+        res.status(200).json({ user });
     }
     else {
         res.status(401);

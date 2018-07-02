@@ -11,45 +11,60 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("./client");
 const text_1 = require("../helpers/text");
 const haiku_1 = require("../models/haiku");
+const user_1 = require("../models/user");
 class UserService {
     //Gets up to 2000 of the user's last tweetssss
     getUserHaikus(screen_name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const cachedHaikus = yield this.checkCachedHaikus(screen_name);
-            if (cachedHaikus.length) {
-                console.log(cachedHaikus[0].createdOn);
-                console.log("found cached haikus");
-                const tweets = yield this.pullTweetsFromTwitter(screen_name, cachedHaikus[0].tweetId);
-                yield this.findAndInsertHaikus(tweets, cachedHaikus);
-                return this.checkCachedHaikus(screen_name);
+            // Check for a cached user
+            const cachedUser = yield this.getCachedUser(screen_name);
+            // If the user exists pull the newest tweets, insert any haikus and then grab all of the haikus in the db
+            if (cachedUser) {
+                console.log("cached user found");
+                const tweets = yield this.pullTweetsFromTwitter(screen_name, {
+                    id: cachedUser.lastTweetId,
+                    type: "since"
+                });
+                if (tweets) {
+                    yield this.findAndInsertHaikus(tweets);
+                    yield this.updateUser(cachedUser, tweets[0]);
+                }
+                const haikus = yield this.getCachedHaikus(screen_name);
+                return {
+                    user: cachedUser,
+                    haikus
+                };
             }
             else {
+                // Grab the users tweets, insert any that are haikus, create a new user in the db
+                // Tweets will not exist if the user does not exist
                 const tweets = yield this.pullTweetsFromTwitter(screen_name);
-                yield this.findAndInsertHaikus(tweets);
-                return this.checkCachedHaikus(screen_name);
+                if (tweets) {
+                    yield this.findAndInsertHaikus(tweets);
+                    const user = yield this.createNewUser(tweets[0]);
+                    const haikus = yield this.getCachedHaikus(screen_name);
+                    return {
+                        user,
+                        haikus
+                    };
+                }
+                // Return false if the user does not exist
+                return false;
             }
         });
     }
-    checkCachedHaikus(screen_name) {
+    getCachedHaikus(screen_name) {
         return haiku_1.Haiku.find({ authorLower: screen_name.toLowerCase() }, {}, { sort: { createdOn: -1 } }).then(haikus => {
             return haikus;
         });
     }
-    findAndInsertHaikus(tweets, cachedHaikus) {
-        if (!tweets && cachedHaikus) {
-            console.log("returning cached haikus");
-            return cachedHaikus;
-        }
-        else if (!tweets && !cachedHaikus) {
-            console.log("User has no haikus");
-            return false;
+    findAndInsertHaikus(tweets) {
+        if (!tweets.length) {
+            return;
         }
         const haikus = new text_1.default(tweets).findHaikus();
         return haiku_1.Haiku.insertMany(haikus)
             .then(docs => {
-            if (cachedHaikus) {
-                return docs.concat(cachedHaikus);
-            }
             return docs;
         })
             .catch(err => {
@@ -61,8 +76,11 @@ class UserService {
         console.log("getting tweets");
         let url = "statuses/user_timeline";
         let params = { screen_name, count: 200 };
-        if (last_id) {
-            params.max_id = last_id;
+        if (last_id && last_id.type === "max") {
+            params.max_id = last_id.id;
+        }
+        else if (last_id && last_id.type === "since") {
+            params.since_id = last_id.id;
         }
         return client_1.default
             .get(url, params)
@@ -86,13 +104,53 @@ class UserService {
                     allTweets = allTweets.concat(tweets);
                 }
                 //Recursively get more tweets
-                return this.pullTweetsFromTwitter(screen_name, tweets[tweets.length - 1].id, allTweets);
+                return this.pullTweetsFromTwitter(screen_name, { id: tweets[tweets.length - 1].id, type: "max" }, allTweets);
             }
             else {
                 console.log("returning from recursion");
                 return allTweets;
             }
         });
+    }
+    getCachedUser(screen_name) {
+        console.log("getting the cached user");
+        return user_1.User.findOne({ userLower: screen_name.toLowerCase() })
+            .then(user => {
+            return user;
+        })
+            .catch(err => {
+            return err;
+        });
+    }
+    createNewUser(tweet) {
+        console.log("creating a new user");
+        const user = {
+            user: tweet.user.screen_name,
+            userLower: tweet.user.screen_name.toLowerCase(),
+            lastTweetId: tweet.id
+        };
+        return user_1.User.create(user)
+            .then(user => {
+            return user;
+        })
+            .catch(err => {
+            return err;
+        });
+    }
+    updateUser(user, tweet) {
+        console.log("updating user with latest tweet", tweet);
+        if (tweet) {
+            return user_1.User.findByIdAndUpdate(user._id, {
+                $set: { lastTweetId: tweet.id }
+            })
+                .then(user => {
+                return user;
+            })
+                .catch(err => {
+                return err;
+            });
+        }
+        return user;
     }
 }
 exports.default = UserService;
