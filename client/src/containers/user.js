@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Container, Row, Column } from 'components/layout';
+import UserInfo from 'components/userInfo';
 import HaikuCollection from "components/haikuCollection";
 import requests from "requests";
 
@@ -30,12 +32,16 @@ class User extends Component {
     const user = this.state.user;
     console.log(user);
     return (
-      <div>
-        <h1>User Page id: {this.props.match.params.id}</h1>
-        <div className="main-container">
-          <HaikuCollection haikus={user.haikus || []} />
-        </div>
-      </div>
+      <Container lg={85}>
+        <Row>
+          <Column lg={3}>
+            <UserInfo data={user}/>
+          </Column>
+          <Column lg={9}>
+            <HaikuCollection haikus={user.haikus || []} />
+          </Column>
+        </Row>
+      </Container>
     );
   }
 }

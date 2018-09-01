@@ -5,8 +5,8 @@ import { Row, Column } from "components/layout";
 const HaikuCollection = ({ haikus }) => {
   return (
     <Row>
-      {haikus.map(haiku => (
-        <Column lg={4}>
+      {haikus.map((haiku, i) => (
+        <Column key={i} lg={4}>
           <Haiku haikuObj={haiku} />
         </Column>
       ))}
