@@ -2,14 +2,16 @@ import React from "react";
 import Haiku from "components/haiku";
 import { Row, Column } from "components/layout";
 
-const HaikuCollection = ({ haikus }) => {
+const HaikuCollection = ({ data }) => {
   return (
     <Row>
-      {haikus.map((haiku, i) => (
-        <Column key={i} lg={4}>
-          <Haiku haikuObj={haiku} />
-        </Column>
-      ))}
+      {data.haikus
+        ? data.haikus.map((haiku, i) => (
+            <Column key={i} lg={4}>
+              <Haiku haikuObj={haiku} />
+            </Column>
+          ))
+        : null}
     </Row>
   );
 };

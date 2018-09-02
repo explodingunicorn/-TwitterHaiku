@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { Container, Row, Column } from 'components/layout';
-import UserInfo from 'components/userInfo';
+import { Container, Row, Column } from "components/layout";
+import UserInfo from "components/userInfo";
 import HaikuCollection from "components/haikuCollection";
 import requests from "requests";
 
@@ -11,7 +11,8 @@ class User extends Component {
     super(props);
 
     this.state = {
-      user: ""
+      user: "",
+      haikus: []
     };
   }
 
@@ -24,21 +25,20 @@ class User extends Component {
   }
 
   async getUserData(userId) {
-    const { user } = await requests.user.get.all(userId);
-    this.setState({ user });
+    const { user, haikus } = await requests.haikus.get("user", userId);
+    this.setState({ user, haikus });
   }
 
   render() {
-    const user = this.state.user;
-    console.log(user);
+    const { user, haikus } = this.state;
     return (
       <Container lg={85}>
         <Row>
           <Column lg={3}>
-            <UserInfo data={user}/>
+            <UserInfo data={user} />
           </Column>
           <Column lg={9}>
-            <HaikuCollection haikus={user.haikus || []} />
+            <HaikuCollection haikus={haikus || []} />
           </Column>
         </Row>
       </Container>

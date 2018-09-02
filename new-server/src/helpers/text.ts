@@ -1,4 +1,4 @@
-import * as sentiment from 'sentiment';
+import * as Sentiment from 'sentiment';
 import * as moment from 'moment';
 import Haiku from '../interfaces/haiku';
 import HaikuChecker from './haikuChecker';
@@ -19,6 +19,8 @@ const monthDict = {
 };
 
 class TextParser {
+  sentiment = new Sentiment();
+
   public findHaikus(tweets: any[]): Haiku[] {
     const haikus = [];
 
@@ -73,7 +75,7 @@ class TextParser {
         tweetUrl: fullTweetInfo.entities.urls.url,
         retweets: fullTweetInfo.retweet_count,
         favorites: fullTweetInfo.favorite_count,
-        sentiment: sentiment(possibleHaiku.haiku),
+        sentiment: this.sentiment.analyze(possibleHaiku.haiku).score,
         date: moment().toDate(),
       };
     }

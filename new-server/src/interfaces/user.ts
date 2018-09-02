@@ -1,7 +1,7 @@
 interface User {
-  user: String;
-  userLower: String;
-  lastTweetId: Number;
+  user: string;
+  userLower: string;
+  lastTweetId: number;
 }
 
 export default User;

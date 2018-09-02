@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "react-emotion";
 import { css } from "emotion";
 
 const rowClass = css({
@@ -51,7 +52,7 @@ const Container = props => {
   const containerClass = css({
     display: "block",
     margin: "0 auto",
-    width: `${props.lg}%`,
+    width: `${props.lg ? props.lg : 100}%`,
 
     "@media (max-width: 1224px)": {
       width: props.md ? `${props.md}%` : `${props.lg}%`
@@ -73,4 +74,8 @@ const Container = props => {
   );
 };
 
-export { Container, Row, Column };
+const Spacer = styled("div")`
+  flex: 1;
+`;
+
+export { Container, Row, Column, Spacer };
