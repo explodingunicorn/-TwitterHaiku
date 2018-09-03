@@ -1,0 +1,12 @@
+{
+  "name": "twitterhaiku",
+  "description": "a really cool app",
+  "version": "0.0.1",
+  "engines": {
+    "npm": "5.6.x"
+  },
+  "scripts": {
+    "start": "cd ./server && npm run start:prod",
+    "postinstall": "cd ./server && npm install"
+  }
+}
