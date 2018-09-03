@@ -6,7 +6,7 @@
     "npm": "5.6.x"
   },
   "scripts": {
-    "start": "cd ./server && npm run start:prod",
+    "start": "cd ./server && npm run start",
     "postinstall": "cd ./server && npm install"
   }
 }
