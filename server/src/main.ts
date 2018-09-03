@@ -6,6 +6,6 @@ import * as path from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useStaticAssets(path.resolve(__dirname + '/build'));
-  await app.listen(4000);
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
