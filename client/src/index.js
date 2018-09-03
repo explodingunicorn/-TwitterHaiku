@@ -7,8 +7,6 @@ import App from "./App";
 import registerServiceWorker from "./registerServiceWorker";
 
 injectGlobal`
-  @import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Open+Sans:400,400i,700');
-
   body, html {
     min-height: 100%;
   }
@@ -49,6 +47,12 @@ injectGlobal`
       font-family: 'Open Sans';
       font-weight: 700;
       text-decoration: none;
+  }
+
+  small {
+    color: ${colors.black};
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
   }
 `;
 

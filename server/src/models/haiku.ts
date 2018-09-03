@@ -1,6 +1,6 @@
-import { Schema, Model, model } from "mongoose";
+import { Schema } from 'mongoose';
 
-const HaikuSchema = new Schema({
+export const Haiku = new Schema({
   author: String,
   authorLower: String,
   authorId: Number,
@@ -14,13 +14,11 @@ const HaikuSchema = new Schema({
   retweets: Number,
   favorites: Number,
   sentiment: Object,
-  date: Date
+  date: Date,
 });
 
-HaikuSchema.pre("insertMany", function(next) {
+Haiku.pre('insertMany', function(next) {
   let now = Date();
   this.date = now;
   next();
 });
-
-export const Haiku: Model = model("Haiku", HaikuSchema);

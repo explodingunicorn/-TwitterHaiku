@@ -1,7 +1,7 @@
-import * as sentiment from "sentiment";
-import * as moment from "moment";
-import Haiku from "../interfaces/haiku";
-import HaikuChecker from "./haikuChecker";
+import * as Sentiment from 'sentiment';
+import * as moment from 'moment';
+import Haiku from '../interfaces/haiku';
+import HaikuChecker from './haikuChecker';
 
 const monthDict = {
   Jan: 1,
@@ -15,39 +15,36 @@ const monthDict = {
   Sep: 9,
   Oct: 10,
   Nov: 11,
-  Dec: 12
+  Dec: 12,
 };
 
 class TextParser {
-  private tweets: any[];
-  private haikus: Haiku[] = [];
+  sentiment = new Sentiment();
 
-  constructor(tweets: any[]) {
-    this.tweets = tweets;
-  }
+  public findHaikus(tweets: any[]): Haiku[] {
+    const haikus = [];
 
-  public findHaikus(): Haiku[] {
-    for (let i = 0; i < this.tweets.length; i++) {
-      const parsedTweet = this.parseTweet(this.tweets[i].text);
-      const haiku = this.checkForHaiku(parsedTweet, this.tweets[i]);
+    for (let i = 0; i < tweets.length; i++) {
+      const parsedTweet = this.parseTweet(tweets[i].text);
+      const haiku = this.checkForHaiku(parsedTweet, tweets[i]);
       if (haiku) {
-        this.haikus.unshift(haiku);
+        haikus.unshift(haiku);
       }
     }
 
-    return this.haikus;
+    return haikus;
   }
 
   private parseTweet(tweet: string): string | null {
-    if (tweet.includes("RT ")) {
+    if (tweet.includes('RT ')) {
       return null;
     }
     tweet = tweet
-      .replace(/(@\S+)/gi, "")
-      .replace(/(http\S+)/, "")
-      .replace(/(#\S+)/, "")
-      .replace(/[.,\/#!$%\^&\*\";:{}=\-_`~()\u2014\u2013]/g, "")
-      .replace(/\s{2,}/g, " ");
+      .replace(/(@\S+)/gi, '')
+      .replace(/(http\S+)/, '')
+      .replace(/(#\S+)/, '')
+      .replace(/[.,\/#!$%\^&\*\";:{}=\-_`~()\u2014\u2013]/g, '')
+      .replace(/\s{2,}/g, ' ');
     return tweet;
   }
 
@@ -61,9 +58,9 @@ class TextParser {
 
     //If the tweet was a haiku return it as a Haiku object
     if (possibleHaiku) {
-      let parsedDate = fullTweetInfo.created_at.split(" ");
+      let parsedDate = fullTweetInfo.created_at.split(' ');
       let formattedDate =
-        monthDict[parsedDate[1]] + "/" + parsedDate[2] + "/" + parsedDate[5];
+        monthDict[parsedDate[1]] + '/' + parsedDate[2] + '/' + parsedDate[5];
 
       return {
         author: fullTweetInfo.user.screen_name,
@@ -78,8 +75,8 @@ class TextParser {
         tweetUrl: fullTweetInfo.entities.urls.url,
         retweets: fullTweetInfo.retweet_count,
         favorites: fullTweetInfo.favorite_count,
-        sentiment: sentiment(possibleHaiku.haiku),
-        date: moment().toDate()
+        sentiment: this.sentiment.analyze(possibleHaiku.haiku).score,
+        date: moment().toDate(),
       };
     }
 

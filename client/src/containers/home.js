@@ -41,6 +41,7 @@ class Home extends React.Component {
         <Row>
           <h2>Recently found haikus</h2>
           <this.RecentHaikus />
+          <HaikuCollection data={{}} />
         </Row>
       </Container>
     );

@@ -9,6 +9,8 @@ export default {
   purpleDark: "#2c294d",
   purpleLight: "#77739c",
   lightGray: "#c4c4c4",
+  mediumGray: "#B0B0B0",
+  darkGray: "#9C9C9C",
   black: "#272727",
   shadow: "0px 3px 7px -2px #c4c4c4"
 };
