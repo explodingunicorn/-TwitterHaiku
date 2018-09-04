@@ -24,8 +24,11 @@ class User extends Component {
   }
 
   async getUserData(userId) {
-    const { user, haikus } = await requests.haikus.get("user", userId);
-    this.setState({ user, haikus });
+    const response = await requests.haikus.get("user", userId);
+    if (response) {
+      const { user, haikus } = response;
+      this.setState({ user, haikus });
+    }
   }
 
   render() {
