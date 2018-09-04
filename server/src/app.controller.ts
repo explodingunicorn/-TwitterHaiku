@@ -7,6 +7,6 @@ export class AppController {
 
   @Get()
   root(@Res() res) {
-    res.sendFile("index.html", { root: __dirname });
+    res.sendFile("index.html", { root: __dirname + '/build' });
   }
 }

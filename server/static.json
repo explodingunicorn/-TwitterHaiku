@@ -1,5 +1,5 @@
 {
-  "root": "./server/src/build/",
+  "root": "src/build/",
   "clean_urls": false,
   "routes": {
     "/**": "index.html"
