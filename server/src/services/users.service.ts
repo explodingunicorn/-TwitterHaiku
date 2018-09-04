@@ -3,7 +3,6 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { HaikusService } from './haikus.service';
 import User from '../interfaces/user';
-import Haiku from '../interfaces/haiku';
 
 @Injectable()
 export class UsersService {
@@ -11,7 +10,7 @@ export class UsersService {
     @Inject(forwardRef(() => HaikusService))
     private readonly haikusService: HaikusService,
     @InjectModel('User') private readonly User: Model<User>,
-  ) {}
+  ) { }
 
   getCachedUser(screen_name: string) {
     console.log('getting the cached user');
@@ -48,6 +47,7 @@ export class UsersService {
 
   async updateUser(user, tweet) {
     if (tweet) {
+      console.log(tweet.id)
       const objectToSet: any = {
         lastTweetId: parseInt(tweet.id),
       };
@@ -64,7 +64,7 @@ export class UsersService {
 
       if (tweet && user.lastTweetId != tweet.id) {
         return this.User.findOneAndUpdate(
-          { user: user.userLower },
+          { "userLower": user.userLower },
           {
             $set: objectToSet,
           },

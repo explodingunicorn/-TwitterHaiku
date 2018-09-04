@@ -6,7 +6,7 @@ import { Haiku } from './models/haiku';
 import { User } from './models/user';
 
 import { HaikusController } from './controllers/haikus.controller';
-import { HaikusService, UsersService } from './services';
+import { HaikusService, UsersService, TwitterService } from './services';
 
 if (!process.env.NODE_ENV) {
   require('dotenv').load();
@@ -17,7 +17,7 @@ function getMongoUrl(): string {
     process.env.NODE_ENV === 'prod'
       ? '@ds141952.mlab.com:41952/twitterhaiku'
       : '@ds141942.mlab.com:41942/twitterhaiku-dev'
-  }`;
+    }`;
 }
 
 @Module({
@@ -29,6 +29,6 @@ function getMongoUrl(): string {
     ]),
   ],
   controllers: [AppController, HaikusController],
-  providers: [AppService, HaikusService, UsersService],
+  providers: [AppService, HaikusService, UsersService, TwitterService],
 })
-export class AppModule {}
+export class AppModule { }
