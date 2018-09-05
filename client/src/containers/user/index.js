@@ -25,7 +25,8 @@ class User extends Component {
 
   async getUserData(userId) {
     const response = await requests.haikus.get("user", userId);
-    if (response) {
+    console.log('response recieved');
+    if (response.haikus) {
       const { user, haikus } = response;
       this.setState({ user, haikus });
     }
