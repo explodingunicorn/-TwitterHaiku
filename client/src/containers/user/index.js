@@ -37,7 +37,7 @@ class User extends Component {
     const data = haikus.length > 0 ? { haikus } : {};
     return (
       <Container style={{ paddingTop: "120px" }} lg={65}>
-        <UserBanner user={user} userName={this.props.match.params.id} />
+        {/* <UserBanner user={user} userName={this.props.match.params.id} /> */}
         <Row>
           <HaikuCollection data={data} />
         </Row>
