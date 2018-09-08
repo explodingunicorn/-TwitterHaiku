@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get()
-  root(@Res() res) {
-    res.sendFile("index.html", { root: __dirname + '/build' });
+  root() {
+
   }
 }
